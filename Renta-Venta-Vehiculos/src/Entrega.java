@@ -120,7 +120,7 @@ public class Entrega {
                     ", IdEmpleado=" + veh.idEm +
                     ", FechaEntrega='" + veh.fechaEn +
                     "', Cargos='" + veh.cargos +
-                    "', Descripcion='" + veh.descri +
+                    "', DescripcionMantenimiento='" + veh.descri +
                     "', Costo='" + veh.costo + "'  WHERE IdEntrega = " + veh.id;
             PreparedStatement st = conexion.getConexion().prepareStatement(dml);
             

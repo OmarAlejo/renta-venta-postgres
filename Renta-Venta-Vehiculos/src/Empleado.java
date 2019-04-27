@@ -148,4 +148,39 @@ public class Empleado {
         
         return resp;
     }
+    
+    public ArrayList<String> obtenEmpleado()
+    {
+        ArrayList<String> clien = new ArrayList<String>();
+        Conexion_BD conexionbd = new Conexion_BD();
+        conexionbd.Conectate();
+        try
+        {
+            Statement st = conexionbd.getConexion().createStatement();
+            String sql = "SELECT IdEmpleado, CONCAT(PrimerNombre, ' ', SegundoNombre, ' ', ApellidoPaterno, "
+                    + "' ', ApellidoMaterno) AS Nombre FROM Empleado.Empleado";
+            ResultSet result = st.executeQuery(sql);
+            
+            while(result.next())
+            {
+                Empleado veh = new Empleado();
+                veh.id = result.getLong("IdEmpleado");
+                veh.primerNombre = result.getString("Nombre");
+                
+                String cli = veh.id + "_" + veh.primerNombre;
+                
+                clien.add(cli);                
+            }
+            result.close();
+            st.close();
+            conexionbd.Desconectate();
+            
+        }
+        catch (Exception ex)
+        {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+        return clien;
+    }
 }

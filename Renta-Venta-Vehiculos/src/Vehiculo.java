@@ -157,4 +157,39 @@ public class Vehiculo {
         
         return resp;
     }
+    
+    public ArrayList<String> obtenVehiculo()
+    {
+        ArrayList<String> clien = new ArrayList<String>();
+        Conexion_BD conexionbd = new Conexion_BD();
+        conexionbd.Conectate();
+        try
+        {
+            Statement st = conexionbd.getConexion().createStatement();
+            String sql = "SELECT IdVehiculo, CONCAT(Marca, ' ', Modelo, ' ', Placas, "
+                    + "' ', Año) AS Nombre FROM Servicios.Vehiculo WHERE Vendido = false AND Disponible = true";
+            ResultSet result = st.executeQuery(sql);
+            
+            while(result.next())
+            {
+                Vehiculo veh = new Vehiculo();
+                veh.id = result.getLong("IdVehiculo");
+                veh.marca = result.getString("Nombre");
+                
+                String cli = veh.id + "_" + veh.marca;
+                
+                clien.add(cli);                
+            }
+            result.close();
+            st.close();
+            conexionbd.Desconectate();
+            
+        }
+        catch (Exception ex)
+        {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+        return clien;
+    }
 }

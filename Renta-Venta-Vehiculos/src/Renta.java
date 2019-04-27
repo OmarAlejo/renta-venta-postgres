@@ -162,4 +162,41 @@ public class Renta {
         
         return resp;
     }
+    
+    public ArrayList<String> obtenRenta()
+    {
+        ArrayList<String> clien = new ArrayList<String>();
+        Conexion_BD conexionbd = new Conexion_BD();
+        conexionbd.Conectate();
+        try
+        {
+            Statement st = conexionbd.getConexion().createStatement();
+            String sql = "SELECT Servicios.Renta.IdRenta, CONCAT(Servicios.Cliente.PrimerNombre, ' ', "
+                    + "Servicios.Cliente.SegundoNombre, ' ', Servicios.Cliente.ApellidoPaterno," 
+                    + "' ', Servicios.Cliente.ApellidoMaterno) AS Nombre FROM Servicios.Renta INNER JOIN Servicios.Cliente" 
+                    + " ON Servicios.Renta.IdCliente = Servicios.Cliente.IdCliente";
+            ResultSet result = st.executeQuery(sql);
+            
+            while(result.next())
+            {
+                Renta veh = new Renta();
+                veh.id = result.getLong("IdRenta");
+                veh.diaDev = result.getString("Nombre");
+                
+                String cli = veh.id + "_" + veh.diaDev;
+                
+                clien.add(cli);                
+            }
+            result.close();
+            st.close();
+            conexionbd.Desconectate();
+            
+        }
+        catch (Exception ex)
+        {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error2",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+        return clien;
+    }
 }

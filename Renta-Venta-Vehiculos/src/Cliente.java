@@ -152,4 +152,39 @@ public class Cliente {
         
         return resp;
     }
+    
+    public ArrayList<String> obtenClientes()
+    {
+        ArrayList<String> clien = new ArrayList<String>();
+        Conexion_BD conexionbd = new Conexion_BD();
+        conexionbd.Conectate();
+        try
+        {
+            Statement st = conexionbd.getConexion().createStatement();
+            String sql = "SELECT IdCliente, CONCAT(PrimerNombre, ' ', SegundoNombre, ' ', ApellidoPaterno, "
+                    + "' ', ApellidoMaterno) AS Nombre FROM Servicios.Cliente";
+            ResultSet result = st.executeQuery(sql);
+            
+            while(result.next())
+            {
+                Cliente veh = new Cliente();
+                veh.id = result.getLong("IdCliente");
+                veh.primerNombre = result.getString("Nombre");
+                
+                String cli = veh.id + "_" + veh.primerNombre;
+                
+                clien.add(cli);                
+            }
+            result.close();
+            st.close();
+            conexionbd.Desconectate();
+            
+        }
+        catch (Exception ex)
+        {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+        return clien;
+    }
 }

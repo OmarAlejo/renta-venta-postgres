@@ -126,4 +126,38 @@ public class Tipo {
         
         return resp;
     }
+    
+    public ArrayList<String> obtenTipo()
+    {
+        ArrayList<String> clien = new ArrayList<String>();
+        Conexion_BD conexionbd = new Conexion_BD();
+        conexionbd.Conectate();
+        try
+        {
+            Statement st = conexionbd.getConexion().createStatement();
+            String sql = "SELECT IdTipo, Tipo FROM Empleado.Tipo";
+            ResultSet result = st.executeQuery(sql);
+            
+            while(result.next())
+            {
+                Tipo veh = new Tipo();
+                veh.id = result.getLong("IdTipo");
+                veh.tipoEmpleado = result.getString("Tipo");
+                
+                String cli = veh.id + "_" + veh.tipoEmpleado;
+                
+                clien.add(cli);                
+            }
+            result.close();
+            st.close();
+            conexionbd.Desconectate();
+            
+        }
+        catch (Exception ex)
+        {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+        return clien;
+    }
 }
