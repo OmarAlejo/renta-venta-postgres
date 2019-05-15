@@ -171,10 +171,11 @@ public class Renta {
         try
         {
             Statement st = conexionbd.getConexion().createStatement();
-            String sql = "SELECT Servicios.Renta.IdRenta, CONCAT(Servicios.Cliente.PrimerNombre, ' ', "
-                    + "Servicios.Cliente.SegundoNombre, ' ', Servicios.Cliente.ApellidoPaterno," 
-                    + "' ', Servicios.Cliente.ApellidoMaterno) AS Nombre FROM Servicios.Renta INNER JOIN Servicios.Cliente" 
-                    + " ON Servicios.Renta.IdCliente = Servicios.Cliente.IdCliente";
+            String sql = "SELECT Servicios.Renta.IdRenta, CONCAT(Servicios.Vehiculo.Modelo,'_',Servicios.Cliente.PrimerNombre, ' ', "
+                    + "Servicios.Cliente.ApellidoPaterno) "
+                    + "AS Nombre FROM Servicios.Renta INNER JOIN Servicios.Cliente" 
+                    + " ON Servicios.Renta.IdCliente = Servicios.Cliente.IdCliente"
+                    + " INNER JOIN Servicios.Vehiculo ON Servicios.Renta.IdVehiculo = Servicios.Vehiculo.IdVehiculo";
             ResultSet result = st.executeQuery(sql);
             
             while(result.next())

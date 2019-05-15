@@ -20,9 +20,12 @@ public class RentaVentaVehiculos {
         Conexion_BD conexionBD = new Conexion_BD();
         conexionBD.Conectate();
         conexionBD.Desconectate();
-        Ventana_Principal ventana = new Ventana_Principal();
+        /*Ventana_Principal ventana = new Ventana_Principal();
         ventana.setVisible(true);
-        ventana.setTitle("Ventana Principal");
+        ventana.setTitle("Ventana Principal");*/
+        Login login = new Login();
+        login.setVisible(true);
+        login.setTitle("Login");
     }
     
 }

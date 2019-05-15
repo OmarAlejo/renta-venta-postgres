@@ -28,9 +28,14 @@ public class Ventana_Principal extends javax.swing.JFrame {
     private DefaultTableModel modeloTabla6;
     private DefaultTableModel modeloTabla7;
     private String id;
+    private final String tipoUsuario;
     Calendar fecha = new GregorianCalendar();
     
-    public Ventana_Principal() {
+    public Ventana_Principal(){
+        tipoUsuario = "Admin";
+    }
+    
+    public Ventana_Principal(String usuario) {
         initComponents();
         creaEncabezado();
         llenaTabla();
@@ -41,6 +46,49 @@ public class Ventana_Principal extends javax.swing.JFrame {
         int dia = fecha.get(Calendar.DAY_OF_MONTH);
         jTFechaV.setText(Integer.toString(ano) + "-" + Integer.toString(mes + 1)  + "-" +Integer.toString(dia));
         jTFechaR.setText(Integer.toString(ano) + "-" + Integer.toString(mes + 1)  + "-" +Integer.toString(dia));
+        tipoUsuario = usuario;
+
+        switch(tipoUsuario) {
+            case "Admin":
+              // code block
+              break;
+            case "Gerente":
+                jButtonModificar.setVisible(false);
+                jButtonModificar1.setVisible(false);
+                jButtonModificar2.setVisible(false);
+                jButtonModificar3.setVisible(false);
+                
+                jButtonEliminar.setVisible(false);
+                jButtonEliminar1.setVisible(false);
+                jButtonEliminar2.setVisible(false);
+                jButtonEliminar3.setVisible(false);
+                
+                
+              break;
+            case "Normal":
+              // code block
+                jButtonAlta.setVisible(false);
+                jButtonAlta1.setVisible(false);
+                jButtonAlta2.setVisible(false);
+                jButtonModificar.setVisible(false);
+                jButtonModificar1.setVisible(false);
+                jButtonModificar2.setVisible(false);
+                jButtonModificar3.setVisible(false);
+                jButtonModificar4.setVisible(false);
+                jButtonModificar5.setVisible(false);
+                jButtonModificar6.setVisible(false);
+                jButtonEliminar.setVisible(false);
+                jButtonEliminar1.setVisible(false);
+                jButtonEliminar2.setVisible(false);
+                jButtonEliminar3.setVisible(false);
+                jButtonEliminar4.setVisible(false);
+                jButtonEliminar5.setVisible(false);
+                jButtonEliminar6.setVisible(false);
+                
+              break;
+            default:
+              // code block
+        }
     }
     
     public void creaEncabezado()
