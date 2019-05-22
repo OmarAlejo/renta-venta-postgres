@@ -28,6 +28,7 @@ public class Ventana_Principal extends javax.swing.JFrame {
     private DefaultTableModel modeloTabla6;
     private DefaultTableModel modeloTabla7;
     private String id;
+    private String idVentaElimina;
     private final String tipoUsuario;
     Calendar fecha = new GregorianCalendar();
     
@@ -1448,7 +1449,7 @@ public class Ventana_Principal extends javax.swing.JFrame {
         
         if(cli.insertaVehiculo(cli) > 0)
         {
-            JOptionPane.showMessageDialog(null, "Cliente Agregado exitosamente",
+            JOptionPane.showMessageDialog(null, "Vehículo Agregado exitosamente",
                     "Nuevo Cliente",JOptionPane.INFORMATION_MESSAGE);
         }
         
@@ -1520,7 +1521,7 @@ public class Ventana_Principal extends javax.swing.JFrame {
         
         if(cli.insertaTipo(cli) > 0)
         {
-            JOptionPane.showMessageDialog(null, "Cliente Agregado exitosamente",
+            JOptionPane.showMessageDialog(null, "Tipo Agregado exitosamente",
                     "Nuevo Cliente",JOptionPane.INFORMATION_MESSAGE);
         }
         
@@ -1587,7 +1588,7 @@ public class Ventana_Principal extends javax.swing.JFrame {
         
         if(cli.insertaEmpleado(cli) > 0)
         {
-            JOptionPane.showMessageDialog(null, "Cliente Agregado exitosamente",
+            JOptionPane.showMessageDialog(null, "Empleado Agregado exitosamente",
                     "Nuevo Cliente",JOptionPane.INFORMATION_MESSAGE);
         }
         
@@ -1756,7 +1757,7 @@ public class Ventana_Principal extends javax.swing.JFrame {
         try {
             if(cli.insertaVenta(cli) > 0)
             {
-                JOptionPane.showMessageDialog(null, "Cliente Agregado exitosamente",
+                JOptionPane.showMessageDialog(null, "Vendido exitosamente",
                         "Nuevo Cliente",JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (ParseException ex) {
@@ -1792,6 +1793,7 @@ public class Ventana_Principal extends javax.swing.JFrame {
 
     private void jButtonEliminar4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEliminar4ActionPerformed
         // TODO add your handling code here:
+        
         Venta fn = new Venta();
         
         if(fn.eliminaVenta(id) > 0)
@@ -1799,6 +1801,26 @@ public class Ventana_Principal extends javax.swing.JFrame {
             //JOptionPane.showMessageDialog(null, "Cliente Agregado exitosamente",
               //      "Nuevo Cliente",JOptionPane.INFORMATION_MESSAGE);
         }
+        Conexion_BD conexion = new Conexion_BD();
+        conexion.Conectate();
+        int resp = -1;
+        try
+	{
+            String dml = "UPDATE Servicios.Vehiculo SET Disponible = true, Vendido = false"
+                    + " WHERE IdVehiculo = ?";
+            PreparedStatement st = conexion.getConexion().prepareStatement(dml);
+            st.setLong(1, Long.parseLong(idVentaElimina));
+            
+            resp = st.executeUpdate();
+            st.close();
+            conexion.Desconectate();
+	}
+	catch (SQLException ex)
+	{
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error",
+                JOptionPane.ERROR_MESSAGE);
+	}
+        
         
         limpiaControles();
         llenaTabla();
@@ -1810,16 +1832,19 @@ public class Ventana_Principal extends javax.swing.JFrame {
         {
             int fila = this.jTable5.getSelectedRow();
             id = jTable5.getModel().getValueAt(fila, 0).toString();
-            for(int i = 0; i < jComboBoxVehV.getItemCount(); i++)
-            {
-                String[] parts = jComboBoxVehV.getItemAt(i).split("_");
-                String valor = jTable5.getModel().getValueAt(fila, 1).toString();
-                if(parts[0].equals(valor))
+            if(jComboBoxVehV.getItemCount() == 0)
+                idVentaElimina = jTable5.getModel().getValueAt(fila, 1).toString();
+            else
+                for(int i = 0; i < jComboBoxVehV.getItemCount(); i++)
                 {
-                    jComboBoxVehV.setSelectedItem(jComboBoxVehV.getItemAt(i));
-                    i = jComboBoxVehV.getItemCount();
+                    String[] parts = jComboBoxVehV.getItemAt(i).split("_");
+                    String valor = jTable5.getModel().getValueAt(fila, 1).toString();
+                    if(parts[0].equals(valor))
+                    {
+                        jComboBoxVehV.setSelectedItem(jComboBoxVehV.getItemAt(i));
+                        i = jComboBoxVehV.getItemCount();
+                    }
                 }
-            }
             for(int i = 0; i < jComboBoxClienV.getItemCount(); i++)
             {
                 String[] parts = jComboBoxClienV.getItemAt(i).split("_");
@@ -1859,7 +1884,7 @@ public class Ventana_Principal extends javax.swing.JFrame {
         try {
             if(cli.insertaRenta(cli) > 0)
             {
-                JOptionPane.showMessageDialog(null, "Cliente Agregado exitosamente",
+                JOptionPane.showMessageDialog(null, "Rentado exitosamente",
                         "Nuevo Cliente",JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (ParseException ex) {
@@ -1990,9 +2015,29 @@ public class Ventana_Principal extends javax.swing.JFrame {
         
         if(cli.insertaEntrega(cli) > 0)
         {
-            JOptionPane.showMessageDialog(null, "Cliente Agregado exitosamente",
+            JOptionPane.showMessageDialog(null, "Entregrado exitosamente",
                     "Nuevo Cliente",JOptionPane.INFORMATION_MESSAGE);
         }
+        
+        Conexion_BD conexion = new Conexion_BD();
+	
+	conexion.Conectate();
+        int resp = -1;
+        try
+	{
+            String dml = "UPDATE Servicios.Vehiculo V SET Disponible = true FROM Servicios.Renta R WHERE R.IdVehiculo = V.IdVehiculo AND R.IdRenta = ?";
+            PreparedStatement st = conexion.getConexion().prepareStatement(dml);
+            st.setLong(1, cli.idRen);
+            
+            resp = st.executeUpdate();
+            st.close();
+            conexion.Desconectate();
+	}
+	catch (SQLException ex)
+	{
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error",
+                JOptionPane.ERROR_MESSAGE);
+	}
         
         limpiaControles();
         llenaTabla();

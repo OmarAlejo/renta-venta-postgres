@@ -36,7 +36,7 @@ public class Vehiculo {
         try
         {
             Statement st = conexionbd.getConexion().createStatement();
-            String sql = "SELECT * FROM Servicios.Vehiculo";
+            String sql = "SELECT * FROM Servicios.Vehiculo ORDER BY IdVehiculo ASC";
             ResultSet result = st.executeQuery(sql);
             
             while(result.next())

@@ -33,7 +33,7 @@ public class Entrega {
         try
         {
             Statement st = conexionbd.getConexion().createStatement();
-            String sql = "SELECT * FROM Servicios.Entrega";
+            String sql = "SELECT * FROM Servicios.Entrega ORDER BY IdEntrega ASC";
             ResultSet result = st.executeQuery(sql);
             
             while(result.next())
