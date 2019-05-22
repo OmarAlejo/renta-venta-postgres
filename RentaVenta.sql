@@ -217,21 +217,18 @@ END
 
 CREATE OR REPLACE FUNCTION ModificaDispEntrega() RETURNS trigger AS $Tr_ModificaDispEntrega$
 BEGIN
-	RAISE NOTICE 'IDRenta is currently %', NEW.IdRenta;
-	RAISE NOTICE 'Disponible is currently %', Disponible FROM Servicios.Vehiculo V INNER JOIN Servicios.Renta R ON V.IdVehiculo = R.IdVehiculo WHERE IdRenta = NEW.IdRenta;
-	
-	UPDATE Servicios.Vehiculo
-	SET Disponible = false FROM Servicios.Vehiculo V INNER JOIN Servicios.Renta R ON R.IdVehiculo = V.IdVehiculo
-	WHERE IdRenta = 7;
-	
-	RAISE NOTICE 'Disponible is currently %', Disponible FROM Servicios.Vehiculo V INNER JOIN Servicios.Renta R ON V.IdVehiculo = R.IdVehiculo WHERE IdRenta = NEW.IdRenta;
+	UPDATE Servicios.Vehiculo V SET Disponible = true FROM Servicios.Renta R WHERE R.IdVehiculo = V.IdVehiculo AND R.IdRenta = @idRenta
 	RETURN NULL;
 END;
 $Tr_ModificaDispEntrega$ LANGUAGE plpgsql;
 
 UPDATE Servicios.Vehiculo SET Marca = 'Ferrari' FROM Servicios.Vehiculo V INNER JOIN Servicios.Renta R ON V.IdVehiculo = R.IdVehiculo WHERE IdRenta = 7 AND R.IdVehiculo = 2
 SELECT * FROM Servicios.Vehiculo V INNER JOIN Servicios.Renta R ON V.IdVehiculo = R.IdVehiculo WHERE IdRenta = 7 AND R.IdVehiculo = 2
-
+SELECT * FROM Servicios.Vehiculo
+SELECT * FROM Servicios.Renta
+UPDATE Servicios.Vehiculo V SET Disponible = true FROM Servicios.Renta R WHERE R.IdVehiculo = V.IdVehiculo AND R.IdRenta = 23
+FROM Servicios.Renta R INNER JOIN Servicios.Vehiculo V ON R.IdVehiculo = V.IdVehiculo WHERE R.IdRenta = 23
+SELECT * FROM Servicios.Renta R INNER JOIN Servicios.Vehiculo V ON R.IdVehiculo = V.IdVehiculo WHERE R.IdRenta = 23
 DROP FUNCTION ModificaDispEntrega() CASCADE
 
 CREATE TRIGGER Tr_ModificaDispEntrega
@@ -296,4 +293,12 @@ DROP FUNCTION CalculaAtrasoRenta() CASCADE
 CREATE TRIGGER Tr_CalculaAtrasoRenta
 AFTER INSERT ON Servicios.Entrega
 FOR EACH ROW EXECUTE PROCEDURE CalculaAtrasoRenta();
- 
+
+CREATE USER Admin WITH PASSWORD 'root';
+GRANT ALL PRIVILEGES ON Servicios.Cliente to Admin;
+GRANT ALL PRIVILEGES ON Servicios.Entrega to Admin;
+GRANT ALL PRIVILEGES ON Servicios.Renta to Admin;
+GRANT ALL PRIVILEGES ON Servicios.Vehiculo to Admin;
+GRANT ALL PRIVILEGES ON Servicios.Venta to Admin;
+GRANT ALL PRIVILEGES ON Empleado.Empleado to Admin;
+GRANT ALL PRIVILEGES ON Empleado.Tipo to Admin;
