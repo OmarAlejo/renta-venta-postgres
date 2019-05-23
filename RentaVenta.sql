@@ -191,7 +191,7 @@ FOR EACH ROW EXECUTE PROCEDURE ModificaDisponibilidadVenta();
 CREATE OR REPLACE FUNCTION SumaCostoEntrega() RETURNS trigger AS $Tr_SumaCostoEntrega$
 BEGIN
 	UPDATE Servicios.Renta
-	SET Total = Total + NEW.Costo
+	SET Total = Total + NEW.Costo + NEW.Cargos
 	WHERE IdRenta = NEW.IdRenta;
 	RETURN NULL;
 END;
@@ -221,6 +221,8 @@ BEGIN
 	RETURN NULL;
 END;
 $Tr_ModificaDispEntrega$ LANGUAGE plpgsql;
+
+DROP TRIGGER Tr_ModificaDispEntrega ON Servicios.Entrega
 
 UPDATE Servicios.Vehiculo SET Marca = 'Ferrari' FROM Servicios.Vehiculo V INNER JOIN Servicios.Renta R ON V.IdVehiculo = R.IdVehiculo WHERE IdRenta = 7 AND R.IdVehiculo = 2
 SELECT * FROM Servicios.Vehiculo V INNER JOIN Servicios.Renta R ON V.IdVehiculo = R.IdVehiculo WHERE IdRenta = 7 AND R.IdVehiculo = 2
@@ -275,11 +277,11 @@ BEGIN
 	RAISE NOTICE 'fechaEntregaVAR is currently %', fechaEntregaVAR;
 	RAISE NOTICE 'diaDevolucionVAR is currently %', diaDevolucionVAR;
 	RAISE NOTICE 'atrasoVAR is currently %', atrasoVAR;*/
-	SELECT DiaDevolucion INTO diaDevolucionVAR FROM Servicios.Renta WHERE IdRenta = 18;
+	SELECT DiaDevolucion INTO diaDevolucionVAR FROM Servicios.Renta WHERE IdRenta = idRentaVAR;
 	SELECT DATE_PART('day', NEW.fechaEntrega::timestamp - diaDevolucionVAR::timestamp) INTO atrasoVAR;
 
-	/*RAISE NOTICE 'diaDevolucionVAR is currently %', diaDevolucionVAR;
-	RAISE NOTICE 'atrasoVAR is currently %', atrasoVAR;*/
+	RAISE NOTICE 'diaDevolucionVAR is currently %', diaDevolucionVAR;
+	RAISE NOTICE 'atrasoVAR is currently %', atrasoVAR;
 	IF atrasoVAR > 0 THEN
 		UPDATE Servicios.Renta SET Total = Total + ((Total * 5 /100) * atrasoVAR) WHERE idRentaVAR = IdRenta;
 	END IF;
@@ -302,3 +304,5 @@ GRANT ALL PRIVILEGES ON Servicios.Vehiculo to Admin;
 GRANT ALL PRIVILEGES ON Servicios.Venta to Admin;
 GRANT ALL PRIVILEGES ON Empleado.Empleado to Admin;
 GRANT ALL PRIVILEGES ON Empleado.Tipo to Admin;
+
+UPDATE Servicios.Vehiculo SET Disponible = true, Vendido = false WHERE IdVehiculo = 8
