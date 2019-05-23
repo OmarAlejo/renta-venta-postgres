@@ -4,13 +4,16 @@
  * and open the template in the editor.
  */
 import java.sql.*;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import javax.swing.*;
 import java.util.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Date;
 /**
  *
  * @author alejo
@@ -90,6 +93,10 @@ public class Ventana_Principal extends javax.swing.JFrame {
             default:
               // code block
         }
+        jComboBox1.setSelectedIndex(dia);
+        jComboBox2.setSelectedIndex(mes);
+        jComboBox4.setSelectedIndex(dia);
+        jComboBox5.setSelectedIndex(mes);
     }
     
     public void creaEncabezado()
@@ -1832,9 +1839,9 @@ public class Ventana_Principal extends javax.swing.JFrame {
         {
             int fila = this.jTable5.getSelectedRow();
             id = jTable5.getModel().getValueAt(fila, 0).toString();
-            if(jComboBoxVehV.getItemCount() == 0)
+            //if(jComboBoxVehV.getItemCount() == 0)
                 idVentaElimina = jTable5.getModel().getValueAt(fila, 1).toString();
-            else
+            /*else
                 for(int i = 0; i < jComboBoxVehV.getItemCount(); i++)
                 {
                     String[] parts = jComboBoxVehV.getItemAt(i).split("_");
@@ -1844,7 +1851,7 @@ public class Ventana_Principal extends javax.swing.JFrame {
                         jComboBoxVehV.setSelectedItem(jComboBoxVehV.getItemAt(i));
                         i = jComboBoxVehV.getItemCount();
                     }
-                }
+                }*/
             for(int i = 0; i < jComboBoxClienV.getItemCount(); i++)
             {
                 String[] parts = jComboBoxClienV.getItemAt(i).split("_");

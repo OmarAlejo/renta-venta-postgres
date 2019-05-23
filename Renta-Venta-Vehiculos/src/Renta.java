@@ -156,7 +156,7 @@ public class Renta {
 	}
 	catch (SQLException ex)
 	{
-            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error",
+            JOptionPane.showMessageDialog(null, "No se puede eliminar una renta.", "Error",
                 JOptionPane.ERROR_MESSAGE);
 	}
         
@@ -171,11 +171,10 @@ public class Renta {
         try
         {
             Statement st = conexionbd.getConexion().createStatement();
-            String sql = "SELECT Servicios.Renta.IdRenta, CONCAT(Servicios.Vehiculo.Modelo,'_',Servicios.Cliente.PrimerNombre, ' ', "
-                    + "Servicios.Cliente.ApellidoPaterno) "
+            String sql = "SELECT Servicios.Renta.IdRenta, CONCAT(Servicios.Vehiculo.Modelo,'_',Servicios.Renta.DiaPrestamo) "
                     + "AS Nombre FROM Servicios.Renta INNER JOIN Servicios.Cliente" 
                     + " ON Servicios.Renta.IdCliente = Servicios.Cliente.IdCliente"
-                    + " INNER JOIN Servicios.Vehiculo ON Servicios.Renta.IdVehiculo = Servicios.Vehiculo.IdVehiculo";
+                    + " INNER JOIN Servicios.Vehiculo ON Servicios.Renta.IdVehiculo = Servicios.Vehiculo.IdVehiculo ORDER BY Servicios.Renta.IdRenta DESC";
             ResultSet result = st.executeQuery(sql);
             
             while(result.next())
