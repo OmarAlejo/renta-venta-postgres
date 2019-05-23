@@ -57,6 +57,7 @@ CREATE TABLE Servicios.Vehiculo
 ALTER TABLE Servicios.Vehiculo
 ALTER COLUMN Disponible TYPE boolean USING Disponible::boolean
 
+
 CREATE TABLE Servicios.Cliente
 (
 	IdCliente BIGSERIAL  NOT NULL,
@@ -71,6 +72,10 @@ CREATE TABLE Servicios.Cliente
 
 	CONSTRAINT PK_Cliente PRIMARY KEY (IdCliente)
 )
+
+ALTER TABLE Servicios.Cliente ADD CONSTRAINT EmailUnique UNIQUE (Email);
+ALTER TABLE Servicios.Cliente ADD CONSTRAINT Check_Telefono CHECK (Telefono ~ '^[0-9 ]*$');
+ALTER TABLE Servicios.Cliente ADD CONSTRAINT Check_Tarjeta CHECK (NumTarjeta ~ '^[0-9 ]*$');
 
 CREATE TABLE Servicios.Venta
 (
@@ -306,3 +311,4 @@ GRANT ALL PRIVILEGES ON Empleado.Empleado to Admin;
 GRANT ALL PRIVILEGES ON Empleado.Tipo to Admin;
 
 UPDATE Servicios.Vehiculo SET Disponible = true, Vendido = false WHERE IdVehiculo = 8
+
