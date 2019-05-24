@@ -312,3 +312,110 @@ GRANT ALL PRIVILEGES ON Empleado.Tipo to Admin;
 
 UPDATE Servicios.Vehiculo SET Disponible = true, Vendido = false WHERE IdVehiculo = 8
 
+SELECT * FROM Servicios.Renta
+SELECT * FROM Servicios.Cliente
+SELECT * FROM Empleado.Empleado
+SELECT * FROM Empleado.Tipo
+
+--Proceso almacenado en el cual le pasamos las placas del vehiculo y nos devuelte una tabla indicando cuantas veces ha sido rentado--
+SELECT Servicios.Vehiculo.Marca, Servicios.Vehiculo.Modelo, Servicios.Vehiculo.Placas, COUNT(Servicios.Renta.IdVehiculo) AS Veces_Rentado FROM Servicios.Vehiculo INNER JOIN Servicios.Renta
+ON Servicios.Vehiculo.IdVehiculo = Servicios.Renta.IdVehiculo WHERE Servicios.Vehiculo.Placas = '988kh' GROUP BY Servicios.Vehiculo.IdVehiculo
+
+CREATE OR REPLACE FUNCTION get_renta_vehiculo (p_pattern1 VARCHAR)
+RETURNS TABLE ( 
+ marca VARCHAR,
+ modelo VARCHAR,
+ placas VARCHAR,
+ rentas BIGINT
+ )
+ AS $$
+ BEGIN
+  RETURN QUERY SELECT Servicios.Vehiculo.Marca, Servicios.Vehiculo.Modelo, Servicios.Vehiculo.Placas, COUNT(Servicios.Renta.IdVehiculo)
+   FROM Servicios.Vehiculo INNER JOIN Servicios.Renta
+ON Servicios.Vehiculo.IdVehiculo = Servicios.Renta.IdVehiculo WHERE Servicios.Vehiculo.Placas = p_pattern1 GROUP BY Servicios.Vehiculo.IdVehiculo;
+END; $$
+LANGUAGE 'plpgsql';
+
+SELECT * FROM get_renta_vehiculo('988kh') ;
+
+UPDATE Servicios.Renta SET IdEmpleado = 3 WHERE IdRenta = 5
+UPDATE Servicios.Renta SET IdCliente = 3 WHERE IdRenta = 5
+UPDATE Empleado.Tipo SET Tipo = 'Gerente' WHERE IdTipo = 3
+
+--Proceso almacenado en el cual le pasamos el nombre y apellido paterno del empleado y nos devuelte una tabla indicando cuantas rentas ha hecho--
+SELECT CONCAT(Empleado.Empleado.PrimerNombre, ' ', Empleado.Empleado.SegundoNombre, ' ', Empleado.Empleado.ApellidoPaterno, ' ', 
+Empleado.Empleado.ApellidoMaterno) AS Nombre, COUNT(Servicios.Renta.IdEmpleado) AS Rentas FROM Empleado.Empleado INNER JOIN Servicios.Renta
+ON Empleado.Empleado.IdEmpleado = Servicios.Renta.IdEmpleado WHERE Empleado.Empleado.PrimerNombre = 'angel'
+AND Empleado.Empleado.ApellidoPaterno = 'al' GROUP BY Empleado.Empleado.IdEmpleado
+
+CREATE OR REPLACE FUNCTION get_rentas_empleado (p_pattern1 VARCHAR, p_pattern2 VARCHAR)
+RETURNS TABLE ( 
+ nombre TEXT,
+ rentas BIGINT
+ )
+ AS $$
+ BEGIN
+  RETURN QUERY SELECT CONCAT(Empleado.Empleado.PrimerNombre, ' ', Empleado.Empleado.SegundoNombre, ' ', Empleado.Empleado.ApellidoPaterno, ' ', 
+Empleado.Empleado.ApellidoMaterno), COUNT(Servicios.Renta.IdEmpleado) FROM Empleado.Empleado INNER JOIN Servicios.Renta
+ON Empleado.Empleado.IdEmpleado = Servicios.Renta.IdEmpleado WHERE Empleado.Empleado.PrimerNombre = 
+p_pattern1 AND Empleado.Empleado.ApellidoPaterno = p_pattern2 GROUP BY Empleado.Empleado.IdEmpleado ;
+END; $$
+LANGUAGE 'plpgsql';
+
+SELECT * FROM get_rentas_empleado('Jose','Madero') ;
+
+DROP FUNCTION get_PA (p_pattern1 VARCHAR, p_pattern2 VARCHAR)
+
+--Proceso almcacenado el cual le pasamos primer nombre y apellido paterno del cliente y nos devuelve una lista con las rentas hechas por el--
+SELECT CONCAT(Servicios.Cliente.PrimerNombre, ' ', Servicios.Cliente.SegundoNombre, ' ', Servicios.Cliente.ApellidoPaterno, ' ', 
+Servicios.Cliente.ApellidoMaterno), Servicios.Vehiculo.Placas, Servicios.Renta.DiaPrestamo FROM Servicios.Cliente INNER JOIN Servicios.Renta
+ON Servicios.Cliente.IdCliente = Servicios.Renta.IdCliente INNER JOIN  Servicios.Vehiculo ON Servicios.Vehiculo.IdVehiculo = Servicios.Renta.IdVehiculo
+WHERE Servicios.Cliente.PrimerNombre = 'ghk' AND Servicios.Cliente.ApellidoPaterno = 'vybyni'
+
+CREATE OR REPLACE FUNCTION get_rentas_cliente (p_pattern1 VARCHAR, p_pattern2 VARCHAR)
+RETURNS TABLE ( 
+ nombre TEXT,
+ placas VARCHAR,
+ dia_prestamo DATE
+ )
+ AS $$
+ BEGIN
+  RETURN QUERY SELECT CONCAT(Servicios.Cliente.PrimerNombre, ' ', Servicios.Cliente.SegundoNombre, ' ', Servicios.Cliente.ApellidoPaterno, ' ', 
+Servicios.Cliente.ApellidoMaterno), Servicios.Vehiculo.Placas, Servicios.Renta.DiaPrestamo FROM Servicios.Cliente INNER JOIN Servicios.Renta
+ON Servicios.Cliente.IdCliente = Servicios.Renta.IdCliente INNER JOIN  Servicios.Vehiculo ON Servicios.Vehiculo.IdVehiculo = Servicios.Renta.IdVehiculo
+WHERE Servicios.Cliente.PrimerNombre = p_pattern1 AND Servicios.Cliente.ApellidoPaterno = p_pattern2 ;
+END; $$
+LANGUAGE 'plpgsql';
+
+ DROP FUNCTION get_rentas_cliente (p_pattern1 VARCHAR, p_pattern2 VARCHAR)
+
+SELECT * FROM get_rentas_cliente('ghnk','vybyni') ;
+
+--Proceso almacenado el cual recibe el tipo de empleado y regresa las ventas que han hecho los empleados con este tipo--
+SELECT Empleado.Tipo.Tipo, Empleado.Empleado.IdEmpleado, Servicios.Venta.FechaVenta FROM Empleado.Empleado INNER JOIN Empleado.Tipo
+ON Empleado.Empleado.IdTipo = Empleado.Tipo.IdTipo INNER JOIN Servicios.Venta ON Empleado.Empleado.IdEmpleado =
+Servicios.Venta.IdEmpleado WHERE Empleado.Tipo.Tipo = 'Administrador'
+
+SELECT Empleado.Tipo.Tipo, Empleado.Empleado.IdEmpleado, Servicios.Venta.FechaVenta FROM Empleado.Empleado INNER JOIN Empleado.Tipo
+ON Empleado.Empleado.IdTipo = Empleado.Tipo.IdTipo INNER JOIN Servicios.Venta ON Empleado.Empleado.IdEmpleado =
+Servicios.Venta.IdEmpleado WHERE Empleado.Tipo.Tipo = 'Gerente'
+
+CREATE OR REPLACE FUNCTION get_ventas_empleado (p_pattern1 VARCHAR)
+RETURNS TABLE ( 
+ tipo VARCHAR,
+ nombre TEXT,
+ fecha_venta DATE
+ )
+ AS $$
+ BEGIN
+  RETURN QUERY SELECT Empleado.Tipo.Tipo, CONCAT(Empleado.Empleado.PrimerNombre, ' ', Empleado.Empleado.SegundoNombre, ' ', Empleado.Empleado.ApellidoPaterno, ' ', 
+Empleado.Empleado.ApellidoMaterno), Servicios.Venta.FechaVenta FROM Empleado.Empleado INNER JOIN Empleado.Tipo
+ON Empleado.Empleado.IdTipo = Empleado.Tipo.IdTipo INNER JOIN Servicios.Venta ON Empleado.Empleado.IdEmpleado =
+Servicios.Venta.IdEmpleado WHERE Empleado.Tipo.Tipo = p_pattern1 ;
+END; $$
+LANGUAGE 'plpgsql';
+
+SELECT * FROM get_ventas_empleado('Administrador') ;
+
+
+ 
