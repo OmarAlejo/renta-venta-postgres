@@ -57,6 +57,9 @@ CREATE TABLE Servicios.Vehiculo
 ALTER TABLE Servicios.Vehiculo
 ALTER COLUMN Disponible TYPE boolean USING Disponible::boolean
 
+ALTER TABLE Servicios.Vehiculo DROP CONSTRAINT Check_Marca
+ALTER TABLE Servicios.Vehiculo ADD CONSTRAINT Check_Marca CHECK (Marca ~ '^[^0-9]+$');
+
 
 CREATE TABLE Servicios.Cliente
 (
@@ -301,7 +304,25 @@ CREATE TRIGGER Tr_CalculaAtrasoRenta
 AFTER INSERT ON Servicios.Entrega
 FOR EACH ROW EXECUTE PROCEDURE CalculaAtrasoRenta();
 
-CREATE USER Admin WITH PASSWORD 'root';
+CREATE USER Admin WITH PASSWORD 'admin';
+GRANT ALL PRIVILEGES ON Servicios.Cliente to Admin;
+GRANT ALL PRIVILEGES ON Servicios.Entrega to Admin;
+GRANT ALL PRIVILEGES ON Servicios.Renta to Admin;
+GRANT ALL PRIVILEGES ON Servicios.Vehiculo to Admin;
+GRANT ALL PRIVILEGES ON Servicios.Venta to Admin;
+GRANT ALL PRIVILEGES ON Empleado.Empleado to Admin;
+GRANT ALL PRIVILEGES ON Empleado.Tipo to Admin;
+
+CREATE USER Gerente WITH PASSWORD 'gerente';
+GRANT ALL PRIVILEGES ON Servicios.Cliente to Gerente;
+GRANT ALL PRIVILEGES ON Servicios.Entrega to Gerente;
+GRANT ALL PRIVILEGES ON Servicios.Renta to Gerente;
+GRANT ALL PRIVILEGES ON Servicios.Vehiculo to Gerente;
+GRANT ALL PRIVILEGES ON Servicios.Venta to Gerente;
+REVOKE ALL PRIVILEGES ON Empleado.Empleado to Gerente;
+REVOKE ALL PRIVILEGES ON Empleado.Tipo to Gerente;
+
+CREATE USER Admin WITH PASSWORD 'admin';
 GRANT ALL PRIVILEGES ON Servicios.Cliente to Admin;
 GRANT ALL PRIVILEGES ON Servicios.Entrega to Admin;
 GRANT ALL PRIVILEGES ON Servicios.Renta to Admin;

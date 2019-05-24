@@ -1,3 +1,6 @@
+
+import javax.swing.JOptionPane;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -11,6 +14,7 @@
 public class Login extends javax.swing.JFrame {
 
     private String usuario;
+    private String password;
     
     /**
      * Creates new form Login
@@ -88,9 +92,52 @@ public class Login extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         usuario = jTusuario.getText();
-        Ventana_Principal ventana = new Ventana_Principal(usuario);
-        ventana.setVisible(true);
-        ventana.setTitle("Ventana Principal : " + usuario);
+        password = jPasswordField1.getText();
+        switch(password)
+        {
+            case "admin": 
+                if(usuario.equals("Admin"))
+                {
+                    Ventana_Principal ventana = new Ventana_Principal(usuario);
+                    ventana.setVisible(true);
+                    ventana.setTitle("Ventana Principal : " + usuario);
+                }
+                else
+                    JOptionPane.showMessageDialog(null, "El usuario o contraseña es incorrecto",
+                    "Warning:",JOptionPane.INFORMATION_MESSAGE);
+                
+                break;
+            case "gerente":
+                if(usuario.equals("Gerente"))
+                {
+                    Ventana_Principal ventana = new Ventana_Principal(usuario);
+                    ventana.setVisible(true);
+                    ventana.setTitle("Ventana Principal : " + usuario);
+                }
+                else
+                    JOptionPane.showMessageDialog(null, "El usuario o contraseña es incorrecto",
+                    "Warning:",JOptionPane.INFORMATION_MESSAGE);
+                break;
+                
+            case "normal":
+                if(usuario.equals("Normal"))
+                {
+                    Ventana_Principal ventana = new Ventana_Principal(usuario);
+                    ventana.setVisible(true);
+                    ventana.setTitle("Ventana Principal : " + usuario);
+                }
+                else
+                    JOptionPane.showMessageDialog(null, "El usuario o contraseña es incorrecto",
+                    "Warning:",JOptionPane.INFORMATION_MESSAGE);
+                break;
+                
+            default:
+                JOptionPane.showMessageDialog(null, "El usuario o contraseña es incorrecto",
+                    "Warning:",JOptionPane.INFORMATION_MESSAGE);
+                break;
+        }
+        
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

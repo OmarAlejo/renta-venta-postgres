@@ -37,10 +37,12 @@ public class Ventana_Principal extends javax.swing.JFrame {
     private String id;
     private String idVentaElimina;
     private final String tipoUsuario;
+    
     Calendar fecha = new GregorianCalendar();
     
     public Ventana_Principal(){
         tipoUsuario = "Admin";
+        
     }
     
     public Ventana_Principal(String usuario) {
@@ -55,10 +57,12 @@ public class Ventana_Principal extends javax.swing.JFrame {
         jTFechaV.setText(Integer.toString(ano) + "-" + Integer.toString(mes + 1)  + "-" +Integer.toString(dia));
         jTFechaR.setText(Integer.toString(ano) + "-" + Integer.toString(mes + 1)  + "-" +Integer.toString(dia));
         tipoUsuario = usuario;
+        
 
         switch(tipoUsuario) {
             case "Admin":
               // code block
+                    
               break;
             case "Gerente":
                 jButtonModificar.setVisible(false);
@@ -95,6 +99,7 @@ public class Ventana_Principal extends javax.swing.JFrame {
                 
               break;
             default:
+                
               // code block
         }
         jComboBox1.setSelectedIndex(dia);

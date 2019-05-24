@@ -97,7 +97,7 @@ public class Vehiculo {
 	}
 	catch (SQLException ex)
 	{
-            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error",
+            JOptionPane.showMessageDialog(null, "Las marcas no aceptan números", "Error",
                 JOptionPane.ERROR_MESSAGE);
 	}
         
