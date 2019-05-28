@@ -2508,7 +2508,7 @@ public class Ventana_Principal extends javax.swing.JFrame {
         Procesos veh = new Procesos();
         Iterator<Procesos> iterador;
         
-        cliens = veh.get_rentas_cliente(jTA1.getText(), jTA2.getText());
+        cliens = veh.get_rentas_cliente(jTA1.getText() + "%", jTA2.getText() + "%");
         System.out.println (jTA1.getText() + jTA2.getText());
         iterador = cliens.iterator();
         
@@ -2537,7 +2537,7 @@ public class Ventana_Principal extends javax.swing.JFrame {
         Procesos veh = new Procesos();
         Iterator<Procesos> iterador;
         
-        cliens = veh.get_renta_vehiculo(jTA3.getText());
+        cliens = veh.get_renta_vehiculo(jTA3.getText() + "%");
         iterador = cliens.iterator();
         
         if(cliens.size() > 0)
@@ -2565,7 +2565,7 @@ public class Ventana_Principal extends javax.swing.JFrame {
         Procesos veh = new Procesos();
         Iterator<Procesos> iterador;
         
-        cliens = veh.get_rentas_empleado(jTA4.getText(), jTA5.getText());
+        cliens = veh.get_rentas_empleado(jTA4.getText() + "%", jTA5.getText() + "%");
         iterador = cliens.iterator();
         
         if(cliens.size() > 0)
@@ -2593,7 +2593,7 @@ public class Ventana_Principal extends javax.swing.JFrame {
         Procesos veh = new Procesos();
         Iterator<Procesos> iterador;
         
-        cliens = veh.get_ventas_empleado(jTA6.getText());
+        cliens = veh.get_ventas_empleado(jTA6.getText() + "%");
         iterador = cliens.iterator();
         
         if(cliens.size() > 0)

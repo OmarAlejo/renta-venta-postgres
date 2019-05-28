@@ -353,11 +353,11 @@ RETURNS TABLE (
  BEGIN
   RETURN QUERY SELECT Servicios.Vehiculo.Marca, Servicios.Vehiculo.Modelo, Servicios.Vehiculo.Placas, COUNT(Servicios.Renta.IdVehiculo)
    FROM Servicios.Vehiculo INNER JOIN Servicios.Renta
-ON Servicios.Vehiculo.IdVehiculo = Servicios.Renta.IdVehiculo WHERE Servicios.Vehiculo.Placas = p_pattern1 GROUP BY Servicios.Vehiculo.IdVehiculo;
+ON Servicios.Vehiculo.IdVehiculo = Servicios.Renta.IdVehiculo WHERE Servicios.Vehiculo.Placas ILIKE p_pattern1 GROUP BY Servicios.Vehiculo.IdVehiculo;
 END; $$
 LANGUAGE 'plpgsql';
 
-SELECT * FROM get_renta_vehiculo('988kh') ;
+SELECT * FROM get_renta_vehiculo('%') ;
 
 UPDATE Servicios.Renta SET IdEmpleado = 3 WHERE IdRenta = 5
 UPDATE Servicios.Renta SET IdCliente = 3 WHERE IdRenta = 5
@@ -378,12 +378,12 @@ RETURNS TABLE (
  BEGIN
   RETURN QUERY SELECT CONCAT(Empleado.Empleado.PrimerNombre, ' ', Empleado.Empleado.SegundoNombre, ' ', Empleado.Empleado.ApellidoPaterno, ' ', 
 Empleado.Empleado.ApellidoMaterno), COUNT(Servicios.Renta.IdEmpleado) FROM Empleado.Empleado INNER JOIN Servicios.Renta
-ON Empleado.Empleado.IdEmpleado = Servicios.Renta.IdEmpleado WHERE Empleado.Empleado.PrimerNombre = 
-p_pattern1 AND Empleado.Empleado.ApellidoPaterno = p_pattern2 GROUP BY Empleado.Empleado.IdEmpleado ;
+ON Empleado.Empleado.IdEmpleado = Servicios.Renta.IdEmpleado WHERE Empleado.Empleado.PrimerNombre ILIKE 
+p_pattern1 AND Empleado.Empleado.ApellidoPaterno ILIKE p_pattern2 GROUP BY Empleado.Empleado.IdEmpleado ;
 END; $$
 LANGUAGE 'plpgsql';
 
-SELECT * FROM get_rentas_empleado('Jose','Madero') ;
+SELECT * FROM get_rentas_empleado('Jose%','%') ;
 
 DROP FUNCTION get_PA (p_pattern1 VARCHAR, p_pattern2 VARCHAR)
 
@@ -404,13 +404,13 @@ RETURNS TABLE (
   RETURN QUERY SELECT CONCAT(Servicios.Cliente.PrimerNombre, ' ', Servicios.Cliente.SegundoNombre, ' ', Servicios.Cliente.ApellidoPaterno, ' ', 
 Servicios.Cliente.ApellidoMaterno), Servicios.Vehiculo.Placas, Servicios.Renta.DiaPrestamo FROM Servicios.Cliente INNER JOIN Servicios.Renta
 ON Servicios.Cliente.IdCliente = Servicios.Renta.IdCliente INNER JOIN  Servicios.Vehiculo ON Servicios.Vehiculo.IdVehiculo = Servicios.Renta.IdVehiculo
-WHERE Servicios.Cliente.PrimerNombre = p_pattern1 AND Servicios.Cliente.ApellidoPaterno = p_pattern2 ;
+WHERE Servicios.Cliente.PrimerNombre ILIKE p_pattern1 AND Servicios.Cliente.ApellidoPaterno ILIKE p_pattern2 ;
 END; $$
 LANGUAGE 'plpgsql';
 
  DROP FUNCTION get_rentas_cliente (p_pattern1 VARCHAR, p_pattern2 VARCHAR)
 
-SELECT * FROM get_rentas_cliente('ghnk','vybyni') ;
+SELECT * FROM get_rentas_cliente('%','vybyni') ;
 
 --Proceso almacenado el cual recibe el tipo de empleado y regresa las ventas que han hecho los empleados con este tipo--
 SELECT Empleado.Tipo.Tipo, Empleado.Empleado.IdEmpleado, Servicios.Venta.FechaVenta FROM Empleado.Empleado INNER JOIN Empleado.Tipo
@@ -432,11 +432,11 @@ RETURNS TABLE (
   RETURN QUERY SELECT Empleado.Tipo.Tipo, CONCAT(Empleado.Empleado.PrimerNombre, ' ', Empleado.Empleado.SegundoNombre, ' ', Empleado.Empleado.ApellidoPaterno, ' ', 
 Empleado.Empleado.ApellidoMaterno), Servicios.Venta.FechaVenta FROM Empleado.Empleado INNER JOIN Empleado.Tipo
 ON Empleado.Empleado.IdTipo = Empleado.Tipo.IdTipo INNER JOIN Servicios.Venta ON Empleado.Empleado.IdEmpleado =
-Servicios.Venta.IdEmpleado WHERE Empleado.Tipo.Tipo = p_pattern1 ;
+Servicios.Venta.IdEmpleado WHERE Empleado.Tipo.Tipo ILIKE p_pattern1 ;
 END; $$
 LANGUAGE 'plpgsql';
 
-SELECT * FROM get_ventas_empleado('Administrador') ;
+SELECT * FROM get_ventas_empleado('G%') ;
 
 
  
